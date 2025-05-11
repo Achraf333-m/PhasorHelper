@@ -1,40 +1,46 @@
-#ifndef COMPLEX_NUMBER_H
-#define COMPLEX_NUMBER_H
+#ifndef COMPLEX_NUMBER
+#define COMPLEX_NUMBER
 
-#include <ostream>
-#include <istream>
+#include <iostream>
 
-class ComplexNumber
-{
-private:
-    double real, imaginary;
 
+class ComplexNumber {
 public:
-    ComplexNumber();
-    ComplexNumber(double r, double i);
-    ComplexNumber(const ComplexNumber &other);
+    ComplexNumber() {};
 
-    // overloaded operators - friends
-    friend std::ostream &operator<<(std::ostream &os, const ComplexNumber &c);
-    friend std::istream &operator>>(std::istream &is, ComplexNumber &c);
+    // main methods
+    virtual ComplexNumber* toRectangular() const = 0;
+    virtual ComplexNumber* toPolar() const = 0;
 
-    // overloaded operators - members
-    ComplexNumber operator+(const ComplexNumber& other) const;
-    ComplexNumber operator-(const ComplexNumber& other) const;
-    ComplexNumber operator*(const ComplexNumber& other) const;
-    ComplexNumber operator/(const ComplexNumber& other) const;
-    bool operator==(const ComplexNumber& other) const;
-    bool operator!=(const ComplexNumber& other) const;
-    ComplexNumber operator^(double angle) const;
-    ComplexNumber operator++(int);
-    ComplexNumber& operator++();
-    ComplexNumber operator--(int);
-    ComplexNumber& operator--();
-    double operator[](int index);
-    double operator~() const; // Returns sqrt(a^2 + b^2)
-    ComplexNumber operator!() const; // Returns a - bi
+    virtual void print(std::ostream &os) const = 0;
+    virtual void read(std::istream &is) = 0;
+
+    virtual double getValOne() const = 0;
+    virtual double getValTwo() const = 0;
     
-    ~ComplexNumber() {};
+    // overloaded operators - members
+    virtual ComplexNumber* operator+(const ComplexNumber& other) const = 0;
+    virtual ComplexNumber* operator-(const ComplexNumber& other) const = 0;
+    virtual ComplexNumber* operator*(const ComplexNumber& other) const = 0;
+    virtual ComplexNumber* operator/(const ComplexNumber& other) const = 0;
+    virtual bool operator==(const ComplexNumber& other) const = 0;
+    virtual bool operator!=(const ComplexNumber& other) const = 0;
+    virtual double operator[](int index) = 0;
+    virtual ComplexNumber* operator!(void) const = 0;
+
+    
+    // overloaded operators - friends
+    friend std::ostream &operator<<(std::ostream &os, const ComplexNumber &c) {
+            c.print(os);
+        return os;
+    }
+    friend std::istream &operator>>(std::istream &is, ComplexNumber &c) {
+            c.read(is);
+        return is;
+    }
+
+
+    virtual ~ComplexNumber() {};
 };
 
 #endif
