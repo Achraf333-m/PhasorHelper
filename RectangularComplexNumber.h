@@ -21,6 +21,7 @@ public:
     // main methods
     ComplexNumber* toPolar() const override;
     ComplexNumber* toRectangular() const override;
+    void toSinusoidal() const override;
 
     void print(std::ostream&) const override;
     void read(std::istream&) override;

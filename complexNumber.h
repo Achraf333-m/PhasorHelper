@@ -11,6 +11,7 @@ public:
     // main methods
     virtual ComplexNumber* toRectangular() const = 0;
     virtual ComplexNumber* toPolar() const = 0;
+    virtual void toSinusoidal() const = 0;
 
     virtual void print(std::ostream &os) const = 0;
     virtual void read(std::istream &is) = 0;

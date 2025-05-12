@@ -38,59 +38,73 @@ void RectangularComplexNumber::read(std::istream &is)
 }
 
 // main
-ComplexNumber* RectangularComplexNumber::toPolar() const {
+ComplexNumber *RectangularComplexNumber::toPolar() const
+{
     double new_magnitude = sqrt((real * real) + (imaginary * imaginary));
     double new_angle = atan2(imaginary, real) * (180 / M_PI);
-    ComplexNumber* polar_form = new PolarComplexNumber(new_magnitude, new_angle);
+    ComplexNumber *polar_form = new PolarComplexNumber(new_magnitude, new_angle);
     return polar_form;
 }
 
-ComplexNumber* RectangularComplexNumber::toRectangular() const {
-    return const_cast<RectangularComplexNumber*>(this);
+ComplexNumber *RectangularComplexNumber::toRectangular() const
+{
+    return const_cast<RectangularComplexNumber *>(this);
 }
 
-ComplexNumber* RectangularComplexNumber::operator+(const ComplexNumber &other) const
-{ 
+void RectangularComplexNumber::toSinusoidal() const
+{
+    double w;
+    std::cout << "Enter frequency: ";
+    std::cin >> w;
+    // freq to angular freq
+    w = 2 * M_PI * w;
+    ComplexNumber *polar = toPolar();
+    std::cout << "\nSinusoidal form: " << polar->getValOne() << "cos( " << w << "t + (" << polar->getValTwo() << ") ).\n";
+    delete polar;
+}
+
+// operators
+ComplexNumber *RectangularComplexNumber::operator+(const ComplexNumber &other) const
+{
     double new_real = this->getValOne() + other.getValOne();
     double new_imaginary = this->getValTwo() + other.getValTwo();
 
-    ComplexNumber* sum = new RectangularComplexNumber(new_real, new_imaginary);
+    ComplexNumber *sum = new RectangularComplexNumber(new_real, new_imaginary);
 
     return sum;
 }
 
-ComplexNumber* RectangularComplexNumber::operator-(const ComplexNumber &other) const
+ComplexNumber *RectangularComplexNumber::operator-(const ComplexNumber &other) const
 {
     double new_real = this->getValOne() - other.getValOne();
     double new_imaginary = this->getValTwo() - other.getValTwo();
 
-    ComplexNumber* differnce = new RectangularComplexNumber(new_real, new_imaginary);
+    ComplexNumber *differnce = new RectangularComplexNumber(new_real, new_imaginary);
 
     return differnce;
 }
 
-ComplexNumber* RectangularComplexNumber::operator*(const ComplexNumber &other) const
+ComplexNumber *RectangularComplexNumber::operator*(const ComplexNumber &other) const
 {
     // the formula for (a + bi)(c +di) can be simplified to (ac-bd) + (ad+bc)i
     double new_real = (this->getValOne() * other.getValOne()) - (this->getValTwo() * other.getValTwo());
-    double new_imaginary =  (this->getValOne() * other.getValTwo()) + (this->getValTwo() * other.getValOne());
+    double new_imaginary = (this->getValOne() * other.getValTwo()) + (this->getValTwo() * other.getValOne());
 
-    ComplexNumber* product = new RectangularComplexNumber(new_real, new_imaginary);
+    ComplexNumber *product = new RectangularComplexNumber(new_real, new_imaginary);
 
     return product;
 }
 
-ComplexNumber* RectangularComplexNumber::operator/(const ComplexNumber &other) const
+ComplexNumber *RectangularComplexNumber::operator/(const ComplexNumber &other) const
 {
     // dividing by using the conjugate method
-    ComplexNumber* numerator = (*this) * (*(!other));
-    ComplexNumber* denominator = other * (*(!other));
-
+    ComplexNumber *numerator = (*this) * (*(!other));
+    ComplexNumber *denominator = other * (*(!other));
 
     double new_real = numerator->getValOne() / denominator->getValOne();
     double new_imaginary = numerator->getValTwo() / denominator->getValTwo();
 
-    ComplexNumber* division = new RectangularComplexNumber(new_real, new_imaginary);
+    ComplexNumber *division = new RectangularComplexNumber(new_real, new_imaginary);
 
     return division;
 }
@@ -105,7 +119,6 @@ bool RectangularComplexNumber::operator!=(const ComplexNumber &other) const
     return !(*this == other);
 }
 
-
 double RectangularComplexNumber::operator[](int index)
 {
     if (index == 0)
@@ -119,11 +132,10 @@ double RectangularComplexNumber::operator[](int index)
     return 0;
 }
 
-
-ComplexNumber* RectangularComplexNumber::operator!(void) const
+ComplexNumber *RectangularComplexNumber::operator!(void) const
 {
     double new_real = this->getValOne();
     double new_imaginary = this->getValTwo() * -1;
-    ComplexNumber* conjugate = new RectangularComplexNumber(new_real, new_imaginary);
+    ComplexNumber *conjugate = new RectangularComplexNumber(new_real, new_imaginary);
     return conjugate;
 }

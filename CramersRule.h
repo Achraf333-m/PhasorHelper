@@ -8,6 +8,7 @@
 #include <iostream>
 #include <vector>
 #include <utility>
+#include <limits>
 
 ComplexNumber *CramersRule()
 {
@@ -28,6 +29,8 @@ ComplexNumber *CramersRule()
     std::cout << "                   [[M10], [M11]]\n";
     std::cout << "Which values (1 or 2) do you want to solve for: ";
     std::cin >> choice;
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::cout << "\nEnter values (row-wise):\n";
 
     // storing phasor in polar form in the matrix vector
@@ -36,6 +39,8 @@ ComplexNumber *CramersRule()
         std::cout << (i == 0? "\nM00\n" : (i == 1 ? "\nM01\n" : (i == 2 ? "\nM10\n" : "\nM11\n")));
         std::cout << "polar (p) or rectangular (r) form? enter p or r: ";
         std::cin >> form;
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         if (form == 'p' || form == 'P')
         {
@@ -66,8 +71,11 @@ ComplexNumber *CramersRule()
     std::cout << "\n\nResult Matrix (2 x 1) \n\n";
     for (int i = 0; i < 2;)
     {
+        std::cout << ((i == 0) ? "\nN0\n" : "\nN1\n")<< std::endl;
         std::cout << "polar (p) or rectangular (r) form? enter p or r: ";
         std::cin >> form;
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         if (form == 'p' || form == 'P')
         {

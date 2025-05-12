@@ -20,7 +20,7 @@ void PolarComplexNumber::print(std::ostream &os) const
     }
     else if (angle < 0)
     {
-        os << magnitude << "/<" << angle << "j\n";
+        os << magnitude << "/<" << angle << "\n";
     }
     else
     {
@@ -51,6 +51,15 @@ ComplexNumber* PolarComplexNumber::toPolar() const {
     return const_cast<PolarComplexNumber*>(this);
 }
 
+void PolarComplexNumber::toSinusoidal() const {
+    double w;
+    std::cout << "Enter frequency: ";
+    std::cin >> w;
+    // freq to angular freq
+    w = 2 * M_PI * w;
+    std::cout << "\nSinusoidal form: " << getValOne() << "cos( " << w << "t + (" << getValTwo() << ") ).\n";
+}
+// operators
 ComplexNumber* PolarComplexNumber::operator+(const ComplexNumber& other) const
 {
     const ComplexNumber* recForm = this->toRectangular();
