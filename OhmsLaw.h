@@ -4,24 +4,28 @@
 #include "ComplexNumber.h"
 #include "RectangularComplexNumber.h"
 #include "PolarComplexNumber.h"
+#include "safe_input.h"
+#include "custom_errors.h"
 
 void setUp(int &, double &, double &, double &, double &);
+void enter_vals(const std::string &, const std::string &, double &mag1, double &mag2, double &ang1, double &ang2);
 ComplexNumber *CalculatePhasor(int &choice);
 
 void OhmsLaw()
 {
     int choice{0};
     ComplexNumber *result = CalculatePhasor(choice);
+    result = new PolarComplexNumber();
     if (result)
     {
+        std::cout << "The " << (choice == 1 ? "Voltage phasor is" : (choice == 2 ? "Current phasor is" : (choice == 3 ? "Impedance phasor is" : "NULL"))) << ": \n";
         result->print(std::cout);
-        std::cout << "The " << (choice == 1 ? "Voltage phasor is" : 
-                               (choice == 2 ? "Current phasor is" : 
-                               (choice == 3 ? "Impedance phasor is" : "NULL"))) << ": \n";
-
         delete result;
-    } else {
+    }
+    else
+    {
         std::cout << "\n[ERROR]: calculation failed.\n";
+        delete result;
     }
 }
 
@@ -53,56 +57,39 @@ ComplexNumber *CalculatePhasor(int &choice)
 
 void setUp(int &choice, double &magnitude_o, double &angle_o, double &magnitude_t, double &angle_t)
 {
+    int integ;
     std::cout << "\n\n**********  OHM'S LAW FOR AC CIRCUITS  **********\n\n";
     std::cout << "Enter one of the following options:\n\n";
     std::cout << "1. Find Voltage (V).\n";
     std::cout << "2. Find Current (I).\n";
     std::cout << "3. Find Impedance (Z).\n";
     std::cout << "Your choice: ";
-    std::cin >> choice;
+
+    choice = safe_input<int>(custom_errors::choice_error());
+
+    if (choice > 3 || choice < 0)
+    {
+        std::cout << "Invalid. Enter your choice (1 - 3): ";
+        choice = safe_input<int>(custom_errors::choice_error());
+    }
 
     switch (choice)
     {
     case 1:
     {
-        std::cout << "\nEnter Impedance (Z) phasor\n";
-        std::cout << "Magnitude: ";
-        std::cin >> magnitude_o;
-        std::cout << "Angle: ";
-        std::cin >> angle_o;
-        std::cout << "\nEnter Current (I) phasor\n";
-        std::cout << "Magnitude: ";
-        std::cin >> magnitude_t;
-        std::cout << "Angle: ";
-        std::cin >> angle_t;
+        enter_vals("Impedance Phasor", "Current Phasor", magnitude_o, magnitude_t, angle_o, angle_t);
+
         break;
     }
     case 2:
     {
-        std::cout << "\nEnter Voltage (V) phasor\n";
-        std::cout << "Magnitude: ";
-        std::cin >> magnitude_o;
-        std::cout << "Angle: ";
-        std::cin >> angle_o;
-        std::cout << "\nEnter Impedance (Z) phasor\n";
-        std::cout << "Magnitude: ";
-        std::cin >> magnitude_t;
-        std::cout << "Angle: ";
-        std::cin >> angle_t;
+        enter_vals("Voltage Phasor", "Impedance Phasor", magnitude_o, magnitude_t, angle_o, angle_t);
+
         break;
     }
     case 3:
     {
-        std::cout << "\nEnter Voltage (V) phasor\n";
-        std::cout << "Magnitude: ";
-        std::cin >> magnitude_o;
-        std::cout << "Angle: ";
-        std::cin >> angle_o;
-        std::cout << "\nEnter Current (I) phasor\n";
-        std::cout << "Magnitude: ";
-        std::cin >> magnitude_t;
-        std::cout << "Angle: ";
-        std::cin >> angle_t;
+        enter_vals("Voltage Phasor", "Current Phasor", magnitude_o, magnitude_t, angle_o, angle_t);
         break;
     }
     default:
@@ -112,6 +99,25 @@ void setUp(int &choice, double &magnitude_o, double &angle_o, double &magnitude_
         break;
     }
     }
+}
+
+void enter_vals(const std::string &s1, const std::string &s2, double &mag1, double &mag2, double &ang1, double &ang2)
+{
+    // test variables
+    double dobl;
+    std::cout << "\nEnter " << s1 << " phasor\n";
+    std::cout << "Magnitude: ";
+    mag1 = safe_input<double>(custom_errors::phasor_error());
+
+    std::cout << "Angle: ";
+    ang1 = safe_input<double>(custom_errors::phasor_error());
+
+    std::cout << "\nEnter " << s2 << " phasor\n";
+    std::cout << "Magnitude: ";
+    mag2 = safe_input<double>(custom_errors::phasor_error());
+
+    std::cout << "Angle: ";
+    ang2 = safe_input<double>(custom_errors::phasor_error());
 }
 
 #endif

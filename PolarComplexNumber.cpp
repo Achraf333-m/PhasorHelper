@@ -4,6 +4,9 @@
 #include "RectangularComplexNumber.h"
 #include "PolarComplexNumber.h"
 
+#include "safe_input.h"
+#include "custom_errors.h"
+
 #include <iostream>
 #include <cmath>
 
@@ -30,12 +33,11 @@ void PolarComplexNumber::print(std::ostream &os) const
 void PolarComplexNumber::read(std::istream &is)
 {
     std::cout << "Enter the magnitude of the complex number: ";
-    is >> magnitude;
+    magnitude = safe_input_stream<double>(is, custom_errors::input_error());
     std::cout << std::endl;
     std::cout << "Enter the angle of the complex number: ";
-    is >> angle;
+    angle = safe_input_stream<double>(is, custom_errors::input_error());
     std::cout << std::endl;
-
 }
 
 // main
@@ -54,10 +56,10 @@ ComplexNumber* PolarComplexNumber::toPolar() const {
 void PolarComplexNumber::toSinusoidal() const {
     double w;
     std::cout << "Enter frequency: ";
-    std::cin >> w;
+    w = safe_input<double>(custom_errors::input_error());
     // freq to angular freq
     w = 2 * M_PI * w;
-    std::cout << "\nSinusoidal form: " << getValOne() << "cos( " << w << "t + (" << getValTwo() << ") ).\n";
+    std::cout << "\nSinusoidal form: " << getValOne() << " cos(" << w << "t + (" << getValTwo() << ")).\n";
 }
 // operators
 ComplexNumber* PolarComplexNumber::operator+(const ComplexNumber& other) const

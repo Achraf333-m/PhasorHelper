@@ -4,6 +4,9 @@
 #include "RectangularComplexNumber.h"
 #include "PolarComplexNumber.h"
 
+#include "custom_errors.h"
+#include "safe_input.h"
+
 #include <iostream>
 #include <cmath>
 
@@ -30,10 +33,10 @@ void RectangularComplexNumber::print(std::ostream &os) const
 void RectangularComplexNumber::read(std::istream &is)
 {
     std::cout << "Enter real part of the complex number: ";
-    is >> real;
+     real = safe_input_stream<double>(is, custom_errors::input_error());
     std::cout << std::endl;
     std::cout << "Enter imaginary part of the complex number: ";
-    is >> imaginary;
+    imaginary = safe_input_stream<double>(is, custom_errors::input_error());
     std::cout << std::endl;
 }
 
@@ -59,7 +62,7 @@ void RectangularComplexNumber::toSinusoidal() const
     // freq to angular freq
     w = 2 * M_PI * w;
     ComplexNumber *polar = toPolar();
-    std::cout << "\nSinusoidal form: " << polar->getValOne() << "cos( " << w << "t + (" << polar->getValTwo() << ") ).\n";
+    std::cout << "\nSinusoidal form: " << polar->getValOne() << " cos( " << w << "t + (" << polar->getValTwo() << ") ).\n";
     delete polar;
 }
 

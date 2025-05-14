@@ -2,31 +2,40 @@
 #include "PolarComplexNumber.h"
 #include "OhmsLaw.h"
 #include "CramersRule.h"
+#include "safe_input.h"
+#include "custom_errors.h"
 
 #include <iostream>
 #include <stdexcept>
 #include <limits>
 
+// declarations
 void welcome();
 void makeSelection(int &);
 ComplexNumber *add(ComplexNumber &first, ComplexNumber &second);
 ComplexNumber *multiply(ComplexNumber &first, ComplexNumber &second);
 ComplexNumber *divide(ComplexNumber &first, ComplexNumber &second);
 void manageOps(ComplexNumber *&);
-void clearBuffer();
 
+
+
+// main program
 int main()
 {
     int choice;
+    char c;
     PolarComplexNumber pcn;
     RectangularComplexNumber rcn;
-    // helpful ptrs
+    // operation ptrs
     ComplexNumber *first = nullptr;
     ComplexNumber *second = nullptr;
 
     welcome();
     makeSelection(choice);
 
+
+    while (choice)
+    {
         switch (choice)
         {
         case 1:
@@ -49,8 +58,7 @@ int main()
         {
             char inp;
             std::cout << "Enter form (polar (p) or rectangular (r)) that you want to convert: ";
-            std::cin >> inp;
-            clearBuffer();
+            inp = safe_input<char>(custom_errors::form_error());
             if (inp == 'p' || inp == 'P')
             {
                 pcn.read(std::cin);
@@ -71,6 +79,7 @@ int main()
         };
         case 4:
         {
+            std::cout << "\ninside switch\n";
             std::cout << "\nEnter two phasors to add: \n";
             std::cout << "*[First Phasor]*\nPolar (p) or Rectangular (r): ";
             manageOps(first);
@@ -82,9 +91,9 @@ int main()
             ComplexNumber *sum_polar = new PolarComplexNumber(sum->getValOne(), sum->getValTwo());
             std::cout << "\n\nSum => ";
             sum_polar->print(std::cout);
-            clearBuffer();
             delete sum;
             delete sum_polar;
+            std::cout << "\nbreaking out\n";
             break;
         };
         case 5:
@@ -100,7 +109,6 @@ int main()
             ComplexNumber *product_polar = new PolarComplexNumber(product->getValOne(), product->getValTwo());
             std::cout << "\n\nProduct => ";
             product_polar->print(std::cout);
-            clearBuffer();
             delete product;
             delete product_polar;
             break;
@@ -119,7 +127,6 @@ int main()
             ComplexNumber *quotient_polar = new PolarComplexNumber(quotient->getValOne(), quotient->getValTwo());
             std::cout << "\nQuotient => ";
             quotient_polar->print(std::cout);
-            clearBuffer();
             delete quotient;
             delete quotient_polar;
             break;
@@ -149,29 +156,60 @@ int main()
             std::cout << "\n******[ALERT]: Exited program.\n";
             break;
         }
-        delete first;
-        delete second;
         }
-    
+        std::cout << "\n\nContinue? (y/n): ";
+        c = safe_input<char>(custom_errors::choice_error());
+
+        if (c == 'y' || c == 'Y')
+        {
+            if (first)
+            {
+                delete first;
+                first = nullptr;
+            }
+
+            if (second && second != first)
+            {
+                delete second;
+                second = nullptr;
+            }
+
+            makeSelection(choice);
+        }
+        else
+        {
+            break;
+        }
+
+        if (first)
+        {
+            delete first;
+            first = nullptr;
+        }
+
+        if (second && second != first)
+        {
+            delete second;
+            second = nullptr;
+        }
+    }
 
     // wait for user to press enter
     std::cout << "Click Enter to exit program..";
-    clearBuffer();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::cin.get();
 
     return 0;
 }
 
-// helpers
 
-void clearBuffer()
-{
-    std::cin.clear();
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-}
+
+
+
+// helpers and implementations
 void welcome()
 {
-    std::cout << "\n************ AC PHASORS TOOL ************\n\n";
+    std::cout << "\n\n************ AC PHASORS TOOL ************\n\n";
     std::cout << "# What is a phasor?\n";
     std::cout << "In AC circuit analysis, due to the sinusoidal nature of voltage and current,\n";
     std::cout << "quantities are represented with both magnitude and angle (phase).\n";
@@ -197,16 +235,14 @@ void makeSelection(int &choice)
     std::cout << "0. Exit.\n\n";
 
     std::cout << "Enter your choice: ";
-    std::cin >> choice;
-    clearBuffer();
+    choice = safe_input<int>(custom_errors::choice_error());
 }
 
 void manageOps(ComplexNumber *&phasor)
 {
     char c;
-    std::cin >> c;
-    clearBuffer();
-    if (phasor)
+    c = safe_input<char>(custom_errors::input_error());
+    if (phasor != nullptr)
     {
         delete phasor;
         phasor = nullptr;
@@ -227,9 +263,8 @@ void manageOps(ComplexNumber *&phasor)
         }
         else
         {
-            std::cout << "Invalid Option. try again: ";
-            std::cin >> c;
-            clearBuffer();
+            std::cout << "Invalid Option. try again (r or p): ";
+            c = safe_input<char>(custom_errors::input_error());
         }
     }
 }
@@ -239,11 +274,17 @@ ComplexNumber *add(ComplexNumber &first, ComplexNumber &second)
     ComplexNumber *polar_first = first.toPolar();
     ComplexNumber *polar_second = second.toPolar();
 
+    // only deleting if new instances are not 'this'
+    bool delete_polar_first = polar_first != &first;
+    bool delete_polar_second = polar_second != &second;
+
     ComplexNumber *sum = (*polar_first) + (*polar_second);
     ComplexNumber *sum_phasor = new PolarComplexNumber(sum->getValOne(), sum->getValTwo());
     delete sum;
-    delete polar_first;
-    delete polar_second;
+    if (delete_polar_first)
+        delete polar_first;
+    if (delete_polar_second)
+        delete polar_second;
 
     return sum_phasor;
 }
@@ -253,11 +294,17 @@ ComplexNumber *multiply(ComplexNumber &first, ComplexNumber &second)
     ComplexNumber *polar_first = first.toPolar();
     ComplexNumber *polar_second = second.toPolar();
 
+    // only deleting if new instances are not 'this'
+    bool delete_polar_first = polar_first != &first;
+    bool delete_polar_second = polar_second != &second;
+
     ComplexNumber *product = (*polar_first) * (*polar_second);
     ComplexNumber *product_phasor = new PolarComplexNumber(product->getValOne(), product->getValTwo());
     delete product;
-    delete polar_first;
-    delete polar_second;
+    if (delete_polar_first)
+        delete polar_first;
+    if (delete_polar_second)
+        delete polar_second;
 
     return product_phasor;
 }
@@ -267,11 +314,17 @@ ComplexNumber *divide(ComplexNumber &first, ComplexNumber &second)
     ComplexNumber *polar_first = first.toPolar();
     ComplexNumber *polar_second = second.toPolar();
 
+    // only deleting if new instances are not 'this'
+    bool delete_polar_first = polar_first != &first;
+    bool delete_polar_second = polar_second != &second;
+
     ComplexNumber *quotient = (*polar_first) / (*polar_second);
     ComplexNumber *quotient_phasor = new PolarComplexNumber(quotient->getValOne(), quotient->getValTwo());
     delete quotient;
-    delete polar_first;
-    delete polar_second;
+    if (delete_polar_first)
+        delete polar_first;
+    if (delete_polar_second)
+        delete polar_second;
 
     return quotient_phasor;
 }
