@@ -12,7 +12,7 @@ This project was inspired by an assignment from my *Programming Methodology* cla
 - Generate **sinusoidal expressions** from phasor forms, using frequency
 - Perform **addition, multiplication, and division** of complex numbers (rectangular/polar form)
 - Apply **Ohm’s Law** using complex impedance and phasors
-- Solve **2×2 systems** using **Cramer’s Rule**
+- Solve **2×2 systems** using **Cramer’s Rule** (See example below)
 
 ---
 
@@ -31,3 +31,14 @@ g++ -o PhasorHelper AlternateCurrentHelper.cpp
 ./PhasorHelper
 ```
 *make sure your IDE compiles all the .cpp files -> "*.cpp"*
+
+
+## Example
+*Problem 9.43 from Fundementales of Electric Circuit -- Sadiku*
+
+### On paper
+![Problem 9.43 on paper](images/exercise.png)
+
+### Using Phasor Helper -- much faster!
+![Problem 9.43 using tool](images/terminal1.png)
+![Problem 9.43 using tool](images/terminal2.png)
