@@ -222,7 +222,7 @@ void makeSelection(int &choice)
     std::cout << "5. Multiply two phasors.\n";
     std::cout << "6. Divide two phasors.\n";
     std::cout << "7. Cramer's rule.\n";
-    std::cout << "8. Use Ohm's Law: 'V = I x Z' to find the missing value.\n";
+    std::cout << "8. Use Ohm's Law.\n";
     std::cout << "0. Exit.\n\n";
 
     std::cout << "Enter your choice: ";
