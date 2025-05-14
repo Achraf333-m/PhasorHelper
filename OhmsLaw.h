@@ -15,17 +15,17 @@ void OhmsLaw()
 {
     int choice{0};
     ComplexNumber *result = CalculatePhasor(choice);
-    result = new PolarComplexNumber();
+    ComplexNumber* result_polar = new PolarComplexNumber(result->getValOne(), result->getValTwo());
     if (result)
     {
-        std::cout << "The " << (choice == 1 ? "Voltage phasor is" : (choice == 2 ? "Current phasor is" : (choice == 3 ? "Impedance phasor is" : "NULL"))) << ": \n";
-        result->print(std::cout);
-        delete result;
+        std::cout << "The " << (choice == 1 ? "Voltage phasor (V) => " : (choice == 2 ? "Current phasor (A) => " : (choice == 3 ? "Impedance phasor (Ohms) => " : "NULL"))) << ": ";
+        result_polar->print(std::cout);
+        delete result_polar;
     }
     else
     {
         std::cout << "\n[ERROR]: calculation failed.\n";
-        delete result;
+        delete result_polar;
     }
 }
 
@@ -40,13 +40,16 @@ ComplexNumber *CalculatePhasor(int &choice)
     PolarComplexNumber phasor_o(magnitude_o, angle_o);
     PolarComplexNumber phasor_t(magnitude_t, angle_t);
 
+    ComplexNumber* voltage = phasor_o * phasor_t;
+    ComplexNumber* current_impedance = phasor_o / phasor_t;
+
     if (choice == 1)
     {
-        return phasor_o * phasor_t;
+        return voltage;
     }
     else if (choice == 2 || choice == 3)
     {
-        return phasor_o / phasor_t;
+        return current_impedance;
     }
     else
     {
@@ -65,31 +68,30 @@ void setUp(int &choice, double &magnitude_o, double &angle_o, double &magnitude_
     std::cout << "3. Find Impedance (Z).\n";
     std::cout << "Your choice: ";
 
-    choice = safe_input<int>(custom_errors::choice_error());
+    choice = safe_input<int>(custom_errors::choice_error_ohm());
 
     if (choice > 3 || choice < 0)
     {
-        std::cout << "Invalid. Enter your choice (1 - 3): ";
-        choice = safe_input<int>(custom_errors::choice_error());
+        choice = safe_input<int>(custom_errors::choice_error_ohm());
     }
 
     switch (choice)
     {
     case 1:
     {
-        enter_vals("Impedance Phasor", "Current Phasor", magnitude_o, magnitude_t, angle_o, angle_t);
+        enter_vals("Impedance", "Current", magnitude_o, magnitude_t, angle_o, angle_t);
 
         break;
     }
     case 2:
     {
-        enter_vals("Voltage Phasor", "Impedance Phasor", magnitude_o, magnitude_t, angle_o, angle_t);
+        enter_vals("Voltage", "Impedance", magnitude_o, magnitude_t, angle_o, angle_t);
 
         break;
     }
     case 3:
     {
-        enter_vals("Voltage Phasor", "Current Phasor", magnitude_o, magnitude_t, angle_o, angle_t);
+        enter_vals("Voltage", "Current", magnitude_o, magnitude_t, angle_o, angle_t);
         break;
     }
     default:
@@ -118,6 +120,7 @@ void enter_vals(const std::string &s1, const std::string &s2, double &mag1, doub
 
     std::cout << "Angle: ";
     ang2 = safe_input<double>(custom_errors::phasor_error());
+
 }
 
 #endif

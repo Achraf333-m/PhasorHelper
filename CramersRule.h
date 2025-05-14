@@ -32,10 +32,10 @@ ComplexNumber *CramersRule()
     std::cout << "                   [[M00], [M01]]\n";
     std::cout << "                   [[M10], [M11]]\n";
     std::cout << "Which values (1 or 2) do you want to solve for: ";
-    safe_input<int>(custom_errors::choice_error());
-    if (choice != 1 || choice != 2) {
-        std::cout << "Invalid option. Please select either 1 for first variable or 2 for second variable: ";
-        safe_input<int>(custom_errors::choice_error());
+    choice = safe_input<int>(custom_errors::choice_error_crmrs());
+    if (choice != 1 && choice != 2) {
+        std::cout << "Invalid option. Please select either 1 or 2: ";
+        choice = safe_input<int>(custom_errors::choice_error_crmrs());
     }
 
     std::cout << "\nEnter values (row-wise):\n";

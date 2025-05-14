@@ -16,6 +16,14 @@ struct custom_errors  {
         return "**INVALID CHOICE. Please try again (valid inputs are 0 to 8)**";
     }
 
+    static constexpr const char* choice_error_crmrs() {
+        return "**INVALID CHOICE. Please try again (valid inputs are 1 or 2)**";
+    }
+
+    static constexpr const char* choice_error_ohm() {
+        return "**INVALID CHOICE. Please try again (valid inputs are 1 - 3)**";
+    }
+
     static constexpr const char* form_error() {
         return "**INVALID FORM. Please try again (valid inputs are: r or p)**";
     }

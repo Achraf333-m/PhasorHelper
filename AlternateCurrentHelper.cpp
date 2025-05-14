@@ -176,27 +176,18 @@ int main()
 
             makeSelection(choice);
         }
-        else
+        else if (c == 'n' || c == 'N')
         {
+            std::cout << "\nExiting program...";
             break;
-        }
-
-        if (first)
-        {
-            delete first;
-            first = nullptr;
-        }
-
-        if (second && second != first)
-        {
-            delete second;
-            second = nullptr;
+        } else {
+            std::cout << "\nUnexpected input. Exiting...\n";
+            break;
         }
     }
 
     // wait for user to press enter
     std::cout << "Click Enter to exit program..";
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::cin.get();
 
     return 0;
