@@ -79,7 +79,6 @@ int main()
         };
         case 4:
         {
-            std::cout << "\ninside switch\n";
             std::cout << "\nEnter two phasors to add: \n";
             std::cout << "*[First Phasor]*\nPolar (p) or Rectangular (r): ";
             manageOps(first);
@@ -93,7 +92,6 @@ int main()
             sum_polar->print(std::cout);
             delete sum;
             delete sum_polar;
-            std::cout << "\nbreaking out\n";
             break;
         };
         case 5:
